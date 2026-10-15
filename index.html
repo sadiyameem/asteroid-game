@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width-device-width, initial-scale=1.0">
+        <title>Asteroid Game</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <div id="gameContainer">
+            <div id="scoreLives">
+                Score: <span id="score">0</span> | Lives: <span id="lives">3</span>
+            </div>
+            <div id="powerUp">Power-Ups: <span id=powerUpStatus>None</span></div>
+            <div id="thrust">Thrust: <span id=thrustLevel>1.0</span></div>
+        </div>
+
+        <canvas id="gameCanvas"></canvas>
+
+        <div id="controls">
+            <button id="leftBtn">Turn</button>
+            <button id="thrustBtn">Thrust</button>
+            <button id="rightBtn">Turn</button>
+            <button id="fireBtn">Fire</button>
+            <button id="restartBtn" style="display: none">Restart</button>
+        </div>
+
+        <div id="messageArea">
+            <p id="messageText"></p>
+        </div>
+        <script src="script.js"></script>
+    </body>
+</html>
