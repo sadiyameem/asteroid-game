@@ -48,7 +48,7 @@ const powerUpType = {
 };
 
 let ship;
-let bullets = [];
+let bullet = [];
 let asteroids = [];
 let powerUps = [];
 let stars = [];
@@ -118,5 +118,130 @@ class Ship {
     }
     if (timeSinceLastShot < currentFireDelay) timeSinceLastShot++;
     }
-    draw() {}
+    draw() {
+        if (shipInvincibleFrames > 0 && Math.floor(Date.now() / 100) % 2 === 0)
+            return;
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.angle);
+
+        if (this.boosterFlameLength > 0) {
+            const flicker = Math.random() * 0.2 + 0.9;
+            const flameLen = this.boosterFlameLength * flicker;
+
+            const gradOuter = ctx.createRadialGradient(
+                -ship_size / 2,
+                0,
+                flameLen * 0.1,
+                -ship_size / 2,
+                0,
+                flameLen * 0.7
+            );
+            gradOuter.addColorStop(0, 'rgba(225, 150, 0, 0.8'); //change
+            gradOuter.addColorStop(1, 'rgba(225, 0, 0, 0.3'); //change
+
+            const gradInner = ctx.createRadialGradient(
+                -ship_size / 2,
+                0,
+                flameLen * 0.05,
+                -ship_size / 2,
+                0,
+                flameLen * 0.4
+            );
+            gradInner.addColorStop(0, 'rgba(255, 255, 200, 1'); // change
+            gradInner.addColorStop(1, 'rgba(255, 200, 0, 0.7'); // change
+
+            ctx.beginPath();
+            ctx.moveTo(-ship_size / 2.5, ship_size / 4);
+            ctx.lineTo(-ship_size / 2 - flameLen, 0);
+            ctx.lineTo(-ship_size / 2.5, -ship_size / 4);
+            ctx.closePath();
+            ctx.fillStyle = gradOuter;
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.moveTo(-ship_size / 2.5, ship_size / 6);
+            ctx.lineTo(-ship_size / 2 - flameLen * 0.8, 0);
+            ctx.lineTo(-ship_size / 2.5, -ship_size / 6);
+            ctx.closePath();
+            ctx.fillStyle = gradOuter;
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.moveTo(-ship_size / 2.5, ship_size / 6);
+            ctx.lineTo(-ship_size / 2 - flameLen * 0.8, 0);
+            ctx.lineTo(-ship_size / 2.5, -ship_size / 6);
+            ctx.closePath();
+            ctx.fillStyle = gradInner;
+            ctx.fill();
+        }
+
+        const shipGrad = ctx.createLinearGradient(
+            -ship_size / 2,
+            -ship_size / 3,
+            ship_size / 2,
+            ship_size / 3
+        );
+        shipGrad.addColorStop(0, 'lightblue'); //change
+        shipGrad.addColorStop(1, 'darkblue'); //change
+
+        ctx.beginPath();
+        ctx.moveTo(ship_size / 2, 0);
+        ctx.lineTo(-ship_size / 2, -ship_size / 3);
+        ctx.lineTo(-ship_size / 2, -ship_size / 3);
+        ctx.closePath();
+        ctx.fillStyle = shipGrad;
+        ctx.strokeStyle = 'cyan';
+        ctx.lineWidth = 1.5;
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.restore();
+
+        if (this.shieldActive) {
+            const shieldGrad = ctx.createRadialGradient(
+                this.x,
+                this.y,
+                this,radius,
+                this.x,
+                this.y,
+                this.radius + 5
+            );
+            shieldGrad.addColorStop(0, 'rgba(0, 180, 255, 0.1');
+            shieldGrad.addColorStop(0, 'rgba(0, 220, 255, 0.7');
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius + 5, 0, Math.PI * 2);
+            ctx.strokeStyle = shieldGrad;
+            ctx.lineWidth = 3;
+            ctx.stroke();
+        }
+    }
+    tryShoot() {
+        if (timeSinceLastShot >= currentFireDelay) {
+            this.tryShoot();
+            timeSinceLastShot = 0;
+        }
+    }
+    shoot() {
+        const moseX = this.x + (ship_size / 2) * Math.cos(this.angle);
+        const noseY = this.y + (ship_size / 2) * Math.sin(this.angle);
+        if (activePowerUp === powerUpType.spread_shot) {
+            const spreadAngle = 0.25;
+            bullet.push(
+                new Bullet(
+                    noseX,
+                    noseY,
+                    bullet_speed + Math.cos(this.angle),
+                    bullet_speed * Math.sin(this.angle)
+                )
+            );
+            bullet_speed.push(
+                new Bullet(
+                    noseX, noseY,
+                    bullet_speed * Math.cos(this.angle - spreadAngle),
+                    bullet_speed * Math.sin(this.angle - spreadAngle)
+                )
+            );
+        }
+    }
 }
