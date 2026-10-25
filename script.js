@@ -235,9 +235,27 @@ class Ship {
                     bullet_speed * Math.sin(this.angle)
                 )
             );
-            bullet_speed.push(
+            bullet.push(
                 new Bullet(
-                    noseX, noseY,
+                    noseX, 
+                    noseY,
+                    bullet_speed * Math.cos(this.angle - spreadAngle),
+                    bullet_speed * Math.sin(this.angle - spreadAngle)
+                )
+            );
+            bullet.push(
+                new Bullet(
+                    noseX,
+                    noseY,
+                    bullet_speed * Math.cos(this.angle - spreadAngle),
+                    bullet_speed * Math.sin(this.angle - spreadAngle)
+                )
+            );
+        } else {
+            bullet.push(
+                new Bullet(
+                    noseX,
+                    noseY,
                     bullet_speed * Math.cos(this.angle - spreadAngle),
                     bullet_speed * Math.sin(this.angle - spreadAngle)
                 )
@@ -245,3 +263,147 @@ class Ship {
         }
     }
 }
+// reset() {
+//     this.x = canvasWidth / 2;
+//     this.y = canvasHeight / 2;
+//     this.vel = {x:0, y:0};
+//     this.angle = -Math.PI / 2;
+//     shipInvincibleFrames = ship_invincibility_frames;
+//     this.deactivatePowerUp();
+// }
+// activePowerUp(type) {
+//     this.deactivePowerUp();
+//     activePowerUp = type;
+//     powerUpTimer = powerup_effect_duration;
+//     switch (type) {
+//         case powerUpType.shield:
+//             this.shieldActive = true;
+//             powerUpStatusEl.textContent = 'Shield Activated!';
+//             break;
+//         case powerUpType.rapid_fire:
+//             currentFireDelay = rapid_fire_delay;
+//             powerUpStatusEl.textContent = 'Spread Shot';
+//             break;
+//     }
+// }
+// deactivePowerUp() {
+//     if (!activePowerUp) return;
+//     switch (activePowerUp) {
+//         case powerUpType.shield:
+//             this.shieldActive = false;
+//             break;
+//         case powerUpType.rapid_fire:
+//             currentFireDelay.spread_shot:
+//             break;
+//     }
+//     activePowerUp = null;
+//     poerUpTimer = 0;
+//     powerUpStatusEl.textContent = 'None';
+// }
+
+// class Bullet {
+//     constructor(x,x,velX,velY) {
+//         this.x = x;
+//         this.y = this.y;
+//         this.vel = {x: velX, y: velY};
+//         this.radius = 3;
+//         this.lifetime = bullet_lifetime;
+//     }
+//     update() {
+//         this.x += this.vel.x;
+//         this.y += this.vel.y;
+//         this.lifetime--;
+//     }
+//     draw() {
+//         const grad = ctx.createRadialGradient(
+//             this.x,
+//             this.y,
+//             0,
+//             this.x,
+//             this.y,
+//             this.radius
+//         );
+//         grad.addColorStop(0, 'rgba(255, 255, 255, 1)'); //change
+//         grad.addColorStop(0, 'rgba(255, 255, 0, 1)'); //change
+//         grad.addColorStop(0, 'rgba(255, 255, 0, 0.5)'); //change
+
+//         ctx.fillStyle = grad;
+//         ctx.beginPath();
+//         ctx.arc(this.x, this.y, this.radius * 1.2, 0, Math.PI * 2);
+//         ctx.fill();
+
+//         // Maybe add an effect later
+//     }
+// }
+
+// class Asteroid {
+//     constructor(x, y, size, velX, velY) {
+//         this.x = x;
+//         this.y = y;
+//         this.size = size;
+//         this.radius = size / 2;
+//         this.vel = {x: velX, y: velY};
+//         this.angle = Math.random() * Math.PI * 2;
+//         this.rotationSpeed = (Math.random() - 0.5) * 0.02;
+//         this.vertices = this.createVerticles();
+        
+//         this.gradientOffset = {
+//             x: (Math.random() - 0.5) * this.radius * 0.5,
+//             y: (Math.random() - 0.5) * this.radius * 0.5,
+//         };
+//     }
+//     createVerticles() {
+//         const numVertices = 8 + Math.floor(Math.random() * 5);
+//         const vertices = [];
+//         for (let i = 0; i < numVertices i++) {
+//             const angle = (i / numVertices) * Math.PI * 2;
+//             const radius = this.radius * (0.7 + Math.random() * 0.6);
+//             vertices.push({
+//                 x: radius * Math.cos(angle),
+//                 y: radius * Math.sin(angle),
+//             });
+//         }
+//         return vertices;
+//     }
+//     update() {
+//         this.x += this.vel.x;
+//         this.y += this.vel.y;
+//         this.angle += this.rotationSpeed;
+//         if (this.x < -this.radius) this.x = canvasWidth + this.radius;
+//         if (this.x > -canvasWidth + this.radius) this.x = -this.radius;
+//         if (this.y < -this.radius) this.y = canvasHeight + this.radius;
+//         if (this.y < canvasHeight + this.radius) this.y = -this.radius;
+//     }
+//     draw() {
+//         ctx.save();
+//         ctx.translate(this.x, this.y);
+//         ctx.rotate(this.angle);
+
+//         const gradX = this.gradientOffset.x;
+//         const gradY = this.gradientOffset.y;
+//         const grad = ctx.createRadialGradient;(
+//             gradX,
+//             gradY,
+//             this.radius * 0.1,
+//             gradX,
+//             gradY,
+//             this.radius * 1.2
+//         );
+//     // change color
+//         // grad.addColorStop(0, '#a0a0a0');
+//         // grad.addColorStop(0, '#707070');
+//         // grad.addColorStop(0, '#404040');
+
+//         ctx.beginPath();
+//         ctx.moveTo(this.vertices[i].x, this.vertices[0].y);
+//         for (let i = 1; i < this.vertices.length; i++) {
+//             ctx.lineTo(this.vertices[i].x, this.vertices[i].y);
+//         }
+//         ctx.closePath();
+
+//         ctx.fillStyle = grad;
+//         ctx.strokeStyle = '#303030' // change
+//         ctx.fill();
+//         ctx.stroke();
+//     }
+// }
